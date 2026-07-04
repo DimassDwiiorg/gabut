@@ -1,0 +1,13 @@
+{
+  "name": "nexaprime-hub",
+  "version": "1.0.0",
+  "description": "Modern Minimalist Dashboard",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

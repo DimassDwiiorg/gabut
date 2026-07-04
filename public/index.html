@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaPrime || Yahmudd :P</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0B0C10;
+            --card-bg: #14161D;
+            --prime-gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --text-main: #E5E7EB;
+            --text-muted: #9CA3AF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 5%;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 12, 16, 0.8);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--prime-gold);
+            text-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .live-time {
+            color: var(--prime-gold);
+            font-weight: 600;
+            border: 1px solid var(--prime-gold);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 0 5%;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--prime-gold);
+            box-shadow: 0 10px 30px var(--gold-glow);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            color: var(--prime-gold);
+            margin-bottom: 12px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #10B981;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #1A1D26;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--prime-gold);
+        }
+
+        button {
+            background: var(--prime-gold);
+            color: var(--bg-dark);
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Output Box Spesifik Buat Chat */
+        .output-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #1A1D26;
+            border-left: 3px solid var(--prime-gold);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-height: 250px;
+            overflow-y: auto;
+            white-space: pre-line; 
+            color: #E5E7EB;
+        }
+
+        .loading-text {
+            animation: blink 1.2s infinite;
+            color: var(--prime-gold);
+            font-style: italic;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Nexa<span>PRIME</span></div>
+        <div class="live-time" id="clock">00:00:00 PM</div>
+    </header>
+
+    <section class="hero">
+        <h1>Yang Masuk Ke Web Ini = Jomok 😹</h1>
+        <p>Kaga tau jir ini website apaan gw asal bikin be yang ada di otak gw</p>
+    </section>
+
+    <div class="grid-container">
+        <div class="card">
+            <div>
+                <h3>System Monitor <span class="status-dot"></span></h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Server status core connection live via Pterodactyl node.</p>
+                <div style="margin-top: 15px;">
+                    <p>Core AI Engine: <span style="color: #10B981;">Connected</span></p>
+                    <p>Database Ping: <span id="ping-val" style="color: var(--prime-gold);">Connecting...</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="grid-column: span 1;">
+            <div>
+                <h3>NexaPrime Ai</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Powered by Claude-Haiku Engine.</p>
+                <input type="text" id="ai-input" placeholder="Bikin Promt Yang Sopan Ya Pantek...">
+                <button id="ai-btn" onclick="askAI()">Kirim Pertanyaan</button>
+                <div class="output-box" id="ai-output">Halo! Ada yang bisa saya bantu hari ini?</div>
+            </div>
+        </div>
+
+        <!-- FITUR 3: Crypto Market Watch -->
+        <div class="card">
+            <div>
+                <h3>Asset Live Tracker</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Fluktuasi harga premium crypto token real-time.</p>
+                <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                    <span>NEXA kripto 🤑:</span>
+                    <span id="coin-price" style="color: #10B981; font-weight: bold;">$1,240.50</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                    <span>Gold Rate:</span>
+                    <span style="color: var(--prime-gold); font-weight: bold;">$2,345.10</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Web acak acakan, Powered By DimassDwii :P. 
+    </footer>
+
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Ping Mock
+        setInterval(() => {
+            fetch('/api/status')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('ping-val').innerText = data.ping + ' ms';
+                })
+                .catch(() => {
+                    document.getElementById('ping-val').innerText = '12 ms';
+                });
+        }, 3000);
+
+        async function askAI() {
+            const inputEl = document.getElementById('ai-input');
+            const outputEl = document.getElementById('ai-output');
+            const btnEl = document.getElementById('ai-btn');
+            const prompt = inputEl.value.trim();
+
+            if (!prompt) return;
+
+            outputEl.innerHTML = '<span class="loading-text">Sabar Ye Gua Lagi Mikir enih...</span>';
+            inputEl.value = '';
+            btnEl.disabled = true;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status) {
+                    outputEl.innerText = data.answer;
+                } else {
+                    outputEl.innerText = data.answer || "Gagal mendapatkan balasan.";
+                }
+            } catch (error) {
+                outputEl.innerText = "Error: Gagal tersambung ke backend server.";
+            } finally {
+                btnEl.disabled = false;
+            }
+        }
+
+        // Crypto Simulator
+        setInterval(() => {
+            const currentPrice = 1240.50;
+            const change = (Math.random() * 4 - 2);
+            const finalPrice = (currentPrice + change).toFixed(2);
+            const el = document.getElementById('coin-price');
+            el.innerText = `$${finalPrice}`;
+            el.style.color = change >= 0 ? '#10B981' : '#EF4444';
+        }, 2000);
+    </script>
+</body>
+</html>
