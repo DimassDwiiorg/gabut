@@ -179,6 +179,28 @@
             50% { opacity: 1; }
             100% { opacity: 0.3; }
         }
+      
+        .copy-btn {
+            width: auto !important;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            background: #1A1D26;
+            color: var(--prime-gold);
+            border: 1px solid var(--prime-gold);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--prime-gold);
+            color: var(--bg-dark);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
 
         footer {
             text-align: center;
@@ -264,7 +286,7 @@
                 });
         }, 3000);
 
-        async function askAI() {
+                async function askAI() {
             const inputEl = document.getElementById('ai-input');
             const outputEl = document.getElementById('ai-output');
             const btnEl = document.getElementById('ai-btn');
@@ -286,7 +308,11 @@
                 const data = await response.json();
                 
                 if (data.status) {
-                    outputEl.innerText = data.answer;
+                    
+                    outputEl.innerHTML = `
+                        <div id="text-to-copy">${data.answer}</div>
+                        <button class="copy-btn" onclick="copyText()">📋 Copy Jawaban</button>
+                    `;
                 } else {
                     outputEl.innerText = data.answer || "Gagal mendapatkan balasan.";
                 }
@@ -296,6 +322,27 @@
                 btnEl.disabled = false;
             }
         }
+
+        // Fungsi khusus buat copy teks
+        function copyText() {
+            const text = document.getElementById('text-to-copy').innerText;
+            const copyBtn = document.querySelector('.copy-btn');
+            
+            navigator.clipboard.writeText(text).then(() => {
+                copyBtn.innerHTML = '✅ Berhasil Di-copy!';
+                copyBtn.style.background = '#10B981';
+                copyBtn.style.color = '#fff';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Copy Jawaban';
+                    copyBtn.style.background = '';
+                    copyBtn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal copy: ', err);
+            });
+        }
+
 
         // Crypto Simulator
         setInterval(() => {
