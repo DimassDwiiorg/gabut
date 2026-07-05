@@ -11,6 +11,7 @@
             --prime-gold: #D4AF37;
             --text-main: #ffffff;
             --text-muted: #a0aec0;
+            --system-red: #ef4444;
         }
 
         body {
@@ -24,9 +25,9 @@
             justify-content: center;
             min-height: 100vh;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent; /* FIX: Anti kedip biru pas nambang di HP */
         }
 
-        /* Container Utama Efek Kaca */
         .miner-container {
             background: rgba(19, 22, 34, 0.7);
             backdrop-filter: blur(12px);
@@ -38,6 +39,7 @@
             max-width: 380px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            user-select: none;
         }
 
         h1 {
@@ -53,7 +55,6 @@
             margin-bottom: 30px;
         }
 
-        /* Area Koin Emas Utama */
         .coin-wrapper {
             position: relative;
             margin: 40px auto;
@@ -75,15 +76,14 @@
             user-select: none;
             box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
             transition: transform 0.05s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Animasi nge-klik membal */
         .gold-coin:active {
             transform: scale(0.92);
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
-        /* Papan Skor */
         .score-board {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -106,7 +106,6 @@
             margin-top: 5px;
         }
 
-        /* Tombol Back */
         .back-btn {
             display: inline-block;
             background: none;
@@ -117,6 +116,7 @@
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .back-btn:hover {
@@ -125,7 +125,6 @@
             background: rgba(214, 175, 55, 0.05);
         }
 
-        /* Efek Teks Melayang (+1) Pas Diklik */
         .floating-text {
             position: absolute;
             color: #fff;
@@ -140,6 +139,62 @@
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
         }
+
+        /* STYLE POP-UP RAJA KRIPTO */
+        .crypto-modal {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(5, 6, 8, 0.9);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1a1528;
+            border: 2px solid #a855f7; /* Aura ungu senada gif */
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 320px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .modal-text {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .close-modal-btn {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 <body>
@@ -148,39 +203,49 @@
         <h1>NexaCoin Miner ⛏️</h1>
         <p class="subtitle">Ketuk koin emas di bawah buat nambang koin ghaib sepuasnya.</p>
 
-        <!-- Papan Skor -->
         <div class="score-board">
             <div class="score-label">Total Saldo Lu</div>
             <div class="score-val"><span id="coin-display">0</span> <span style="font-size: 1.2rem;">NC</span></div>
         </div>
 
-        <!-- Area Klik Koin -->
         <div class="coin-wrapper">
             <div id="coin-clicker" class="gold-coin">🪙</div>
         </div>
-        <a href="#" class="back-btn">yok kerja kerja.Kalo udah 500 bakal ada kejutan 🤩</a>
+        <div class="back-btn">yok kerja kerja. Kalo udah 500 bakal ada kejutan 🤩</div>
+    </div>
+
+    <!-- STRUKTUR LAYAR POP-UP RAJA KRIPTO -->
+    <div id="cryptoModal" class="crypto-modal">
+        <div class="modal-content">
+            <!-- Menampilkan file giphy.gif -->
+            <img src="giphy.gif" alt="Raja Kripto">
+            <div class="modal-text">ANJIRR BENERAN SAMPE 500, AWOKAWOK GA ESPEK LOH YA😹😹</div>
+            <button class="close-modal-btn" onclick="closeCryptoModal()">RISPEK BUAT LU 👑</button>
+        </div>
+    </div>
 
     <script>
-        // Ambil data koin lama dari localStorage biar gak reset pas refresh
         let coins = localStorage.getItem('nexaCoinsTotal') ? parseInt(localStorage.getItem('nexaCoinsTotal')) : 0;
         const coinDisplay = document.getElementById('coin-display');
         const coinClicker = document.getElementById('coin-clicker');
         const wrapper = document.querySelector('.coin-wrapper');
+        const modal = document.getElementById('cryptoModal');
 
-        // Set skor awal pas halaman dibuka
         coinDisplay.innerText = coins.toLocaleString('id-ID');
 
-        // Fungsi mining pas koin diklik
         coinClicker.addEventListener('click', (e) => {
             coins++;
             localStorage.setItem('nexaCoinsTotal', coins);
             coinDisplay.innerText = coins.toLocaleString('id-ID');
 
-            // Bikin efek "+1" melayang di posisi jari/kursor
             createFloatingText(e.offsetX, e.offsetY);
+
+            // DETEKSI UTAMA: Pas saldo menyentuh angka 500 pas, langsung panggil pop-up!
+            if (coins === 500) {
+                openCryptoModal();
+            }
         });
 
-        // Logic buat bikin text melayang ala game clicker pro
         function createFloatingText(x, y) {
             const txt = document.createElement('div');
             txt.innerText = '+1';
@@ -190,10 +255,18 @@
 
             wrapper.appendChild(txt);
 
-            // Hapus element biar gak menuh-menuhin HTML
             setTimeout(() => {
                 txt.remove();
             }, 600);
+        }
+
+        // Fungsi kontrol pop-up modal
+        function openCryptoModal() {
+            modal.style.display = 'flex';
+        }
+
+        function closeCryptoModal() {
+            modal.style.display = 'none';
         }
     </script>
 
