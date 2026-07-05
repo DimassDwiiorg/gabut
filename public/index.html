@@ -423,44 +423,70 @@
             <!-- Daftar Game Grid -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <!-- Game 1 -->
-                <a href="miner.html" style="text-decoration: none;">
-                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(214,175,55,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                <div onclick="mainkanGame('miner.html')" style="cursor: pointer; text-decoration: none;">
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; -webkit-tap-highlight-color: transparent;">
                         <span style="font-size: 1.5rem; display: block; margin-bottom: 5px;">⛏️</span>
                         <span style="color: #fff; font-size: 0.85rem; font-weight: 600; display: block;">NexaCoin Miner</span>
                     </div>
-                </a>
+                </div>
 
                 <!-- Game 2 -->
-                <a href="guess.html" style="text-decoration: none;">
-                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(214,175,55,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                <div onclick="mainkanGame('guess.html')" style="cursor: pointer; text-decoration: none;">
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; -webkit-tap-highlight-color: transparent;">
                         <span style="font-size: 1.5rem; display: block; margin-bottom: 5px;">🤔</span>
                         <span style="color: #fff; font-size: 0.85rem; font-weight: 600; display: block;">Tebak Angka</span>
                     </div>
-                </a>
+                </div>
 
                 <!-- Game 3 -->
-                <a href="snake.html" style="text-decoration: none;">
-                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(214,175,55,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                <div onclick="mainkanGame('snake.html')" style="cursor: pointer; text-decoration: none;">
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; -webkit-tap-highlight-color: transparent;">
                         <span style="font-size: 1.5rem; display: block; margin-bottom: 5px;">🐍</span>
                         <span style="color: #fff; font-size: 0.85rem; font-weight: 600; display: block;">Ula kadut emas</span>
                     </div>
-                </a>
+                </div>
 
                 <!-- Game 4 -->
-                <a href="flap.html" style="text-decoration: none;">
-                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(214,175,55,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                <div onclick="mainkanGame('flap.html')" style="cursor: pointer; text-decoration: none;">
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--prime-gold); border-radius: 8px; padding: 15px 10px; text-align: center; -webkit-tap-highlight-color: transparent;">
                         <span style="font-size: 1.5rem; display: block; margin-bottom: 5px;">🐱</span>
                         <span style="color: #fff; font-size: 0.85rem; font-weight: 600; display: block;">NexaFlap</span>
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
         
     </div>
 
     <footer>
-        &copy; 2026 Web acak acakan, Powered By DimassDwii :P. 
+        &copy; 2026 Web Ngetes Kemampuan Gueh, Powered By DimassDwii :P. 
     </footer>
+
+        <!-- Wadah Layar Game Pop-up Fullscreen -->
+<div id="layar-game-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0d13; z-index: 999999; -webkit-tap-highlight-color: transparent;">
+    <!-- Tombol Close Melayang di Kiri Atas -->
+    <button onclick="keluarGame()" style="position: absolute; top: 15px; left: 15px; background: rgba(239, 68, 68, 0.85); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-family: sans-serif; font-size: 0.9rem; cursor: pointer; z-index: 1000000; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">❌ Keluar Game</button>
+    
+    <!-- Jendela tempat nampilin game -->
+    <iframe id="frame-game" src="" style="width: 100%; height: 100%; border: none; margin: 0; padding: 0;"></iframe>
+</div>
+
+<script>
+function mainkanGame(urlTarget) {
+    const container = document.getElementById('layar-game-container');
+    const iframe = document.getElementById('frame-game');
+    
+    iframe.src = urlTarget; 
+    container.style.display = 'block'; 
+}
+
+function keluarGame() {
+    const container = document.getElementById('layar-game-container');
+    const iframe = document.getElementById('frame-game');
+    
+    container.style.display = 'none'; 
+    iframe.src = ''; 
+}
+</script>
 
         <!-- 1. Tombol Melayang di Pojok Kiri Bawah -->
     <div id="music-float-btn" onclick="toggleMusicPopup()">
@@ -473,16 +499,13 @@
             <!-- Tombol Close di Pojok Kanan Atas Pop-up -->
             <span class="close-popup" onclick="toggleMusicPopup()">&times;</span>
             
-            <!-- Cover Album/Lagu -->
             <div class="album-art">🎵</div>
             
-            <!-- Detail Lagu -->
             <div class="track-info">
                 <h4 id="popup-track-title">Lagu khusus buat lu 😹</h4>
                 <p id="popup-track-artist">DimzzX Music.</p>
             </div>
-            
-            <!-- Tag Audio Gaib (Silahkan ganti src pake file .mp3 lu) -->
+            a
             <audio id="nexaAudio" src="https://www.image2url.com/r2/default/audio/1783224364797-9bed94ce-7913-44f4-b30c-b97356c898ef.mp3" loop></audio>
             
 
