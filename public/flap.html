@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaFlap 🐱</title>
+    <style>
+        :root {
+            --bg-dark: #0b0d13;
+            --prime-gold: #D4AF37;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --system-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            touch-action: none; /* Biar HP ga scrolling pas ditap-tap layarnya */
+        }
+
+        .game-container {
+            background: rgba(19, 22, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(214, 175, 55, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 95%;
+            max-width: 360px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--prime-gold);
+            margin-top: 0;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .score-box {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        #score {
+            color: var(--prime-gold);
+            font-weight: bold;
+        }
+
+        /* Canvas Game */
+        canvas {
+            background: linear-gradient(to bottom, #050608, #11141d);
+            border: 2px solid rgba(214, 175, 55, 0.3);
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto 20px auto;
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        .btn-link {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-back {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-muted);
+            background: none;
+        }
+
+        .btn-back:hover {
+            border-color: var(--prime-gold);
+            color: #fff;
+            background: rgba(214, 175, 55, 0.05);
+        }
+
+        .btn-restart {
+            background: var(--prime-gold);
+            color: #111;
+            border: none;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>NexaFlap 🐱</h1>
+        <div class="score-box">Skor Lu: <span id="score">0</span></div>
+
+        <!-- Canvas Arena Lompat -->
+        <canvas id="flapCanvas" width="320" height="380"></canvas>
+
+        <button onclick="restartGame()" id="restart-btn" class="btn-link btn-restart">Main Lagi 🔄</button>
+        <a href="index.html" class="btn-link btn-back">⬅ Kembali ke Dashboard</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("flapCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreDisplay = document.getElementById("score");
+        const restartBtn = document.getElementById("restart-btn");
+
+        // Game Physics & Variables
+        let bird;
+        let pipes;
+        let score;
+        let gameLoop;
+        let isGameOver;
+        
+        const gravity = 0.25;
+        const jump = -4.6;
+        const pipeWidth = 45;
+        const pipeGap = 110; // Jarak lubang pipa lewat burung
+        const pipeSpeed = 1.5;
+
+        // Inisialisasi awal
+        initGame();
+
+        function initGame() {
+            bird = {
+                x: 50,
+                y: 150,
+                velocity: 0,
+                radius: 12
+            };
+            pipes = [];
+            score = 0;
+            scoreDisplay.innerText = score;
+            isGameOver = false;
+            restartBtn.style.display = "none";
+
+            // Spawn pipa pertama
+            spawnPipe();
+
+            clearInterval(gameLoop);
+            gameLoop = setInterval(update, 1000 / 60); // 60 FPS biar smooth
+        }
+
+        function spawnPipe() {
+            // Tinggi pipa atas acak
+            let topHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 60)) + 30;
+            pipes.push({
+                x: canvas.width,
+                top: topHeight,
+                bottom: canvas.height - topHeight - pipeGap,
+                passed: false
+            });
+        }
+
+        // Logic Input Tap Layar HP / Klik PC / Spasi Keyboard
+        canvas.addEventListener("click", () => { if (!isGameOver) bird.velocity = jump; });
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && !isGameOver) {
+                bird.velocity = jump;
+                e.preventDefault(); // Biar spasi ga nge-scroll browser
+            }
+        });
+
+        // Loop Update Frame Game
+        function update() {
+            // 1. Logika Pergerakan Burung/Kucing
+            bird.velocity += gravity;
+            bird.y += bird.velocity;
+
+            // Batas Bawah & Atas Canvas
+            if (bird.y + bird.radius >= canvas.height || bird.y - bird.radius <= 0) {
+                triggerGameOver();
+            }
+
+            // 2. Logika Pergerakan Pipa
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].x -= pipeSpeed;
+
+                // Hitung Skor kalo berhasil lewatin pipa
+                if (!pipes[i].passed && pipes[i].x + pipeWidth < bird.x) {
+                    score++;
+                    scoreDisplay.innerText = score;
+                    pipes[i].passed = true;
+                }
+
+                // Deteksi Tabrakan Fisik dengan Pipa
+                if (
+                    bird.x + bird.radius > pipes[i].x && 
+                    bird.x - bird.radius < pipes[i].x + pipeWidth &&
+                    (bird.y - bird.radius < pipes[i].top || bird.y + bird.radius > canvas.height - pipes[i].bottom)
+                ) {
+                    triggerGameOver();
+                }
+
+                // Hapus pipa yang udah keluar layar kiri biar ga lemot
+                if (pipes[i].x + pipeWidth < 0) {
+                    pipes.splice(i, 1);
+                }
+            }
+
+            // Spawn Pipa baru secara berkala
+            if (pipes.length > 0 && pipes[pipes.length - 1].x < canvas.width - 150) {
+                spawnPipe();
+            }
+
+            // RENDER VISUAL
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Gambar Pipa Cyber Gold
+            pipes.forEach(pipe => {
+                ctx.fillStyle = "rgba(214, 175, 55, 0.85)";
+                ctx.strokeStyle = "var(--prime-gold)";
+                ctx.lineWidth = 2;
+
+                // Pipa Atas
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+                ctx.strokeRect(pipe.x, -2, pipeWidth, pipe.top + 2);
+
+                // Pipa Bawah
+                ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+                ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom + 2);
+            });
+
+            // Gambar Burung/Kucing Glowing Bulat
+            ctx.fillStyle = "#fff";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "var(--prime-gold)";
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Ornamen Mata Kucing/Burung biar lucu
+            ctx.fillStyle = "#111";
+            ctx.shadowBlur = 0;
+            ctx.fillRect(bird.x + 2, bird.y - 4, 3, 3);
+
+            // Tampilan Kalo Game Over
+            if (isGameOver) {
+                ctx.fillStyle = "rgba(239, 68, 68, 0.25)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "var(--system-red)";
+                ctx.font = "bold 22px Segoe UI";
+                ctx.textAlign = "center";
+                ctx.fillText("NABRAK BANGG! 💀", canvas.width / 2, canvas.height / 2);
+            }
+        }
+
+        function triggerGameOver() {
+            clearInterval(gameLoop);
+            isGameOver = true;
+            restartBtn.style.display = "block";
+        }
+
+        function restartGame() {
+            initGame();
+        }
+    </script>
+</body>
+  </html>
+
