@@ -208,6 +208,149 @@
             color: var(--text-muted);
             font-size: 0.85rem;
         }
+
+                /* --- STYLE MUSIC PLAYER GLASSMORPHISM --- */
+        
+        /* Tombol Melayang Pojok Kiri Bawah */
+        #music-float-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: var(--prime-gold, #D4AF37);
+            color: #111;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+        #music-float-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Container Pop-up (Modal) */
+        #music-popup {
+            display: none; /* Sembunyi secara default */
+            position: fixed;
+            bottom: 90px; /* Di atas tombol float sedikit */
+            left: 20px;
+            width: 300px;
+            z-index: 9998;
+            animation: slideUp 0.3s ease forwards;
+        }
+
+        /* Isi Pop-up Efek Kaca (Glassmorphism) */
+        .popup-content {
+            background: rgba(26, 29, 38, 0.65); /* Warna dasar gelap transparan */
+            backdrop-filter: blur(12px) saturate(180%); /* Efek Kaca Blur */
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            text-align: center;
+        }
+
+        /* Tombol Close */
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-popup:hover {
+            color: #EF4444;
+        }
+
+        /* Cover Album Bulat/Kotak Estetik */
+        .album-art {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #2c3040, #11141d);
+            border: 2px solid rgba(214, 175, 55, 0.3);
+            border-radius: 12px;
+            margin: 10px auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        /* Info Judul Lagu */
+        .track-info h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .track-info p {
+            margin: 5px 0 20px 0;
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+
+        /* Navigasi / Tombol Kontrol ala Spotify */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .sub-btn {
+            font-size: 1.2rem;
+            color: #a0aec0;
+        }
+        .sub-btn:hover {
+            color: #fff;
+        }
+        
+        /* Tombol Play Besar di Tengah */
+        .main-btn {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            color: #111;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+        }
+        .main-btn:hover {
+            transform: scale(1.08);
+            background: var(--prime-gold, #D4AF37);
+        }
+
+        /* Efek Animasi Muncul */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            }
     </style>
 </head>
 <body>
@@ -264,6 +407,43 @@
     <footer>
         &copy; 2026 Web acak acakan, Powered By DimassDwii :P. 
     </footer>
+
+        <!-- 1. Tombol Melayang di Pojok Kiri Bawah -->
+    <div id="music-float-btn" onclick="toggleMusicPopup()">
+        🎵
+    </div>
+
+    <!-- 2. Pop-up Dashboard ala Spotify (Efek Kaca) -->
+    <div id="music-popup">
+        <div class="popup-content">
+            <!-- Tombol Close di Pojok Kanan Atas Pop-up -->
+            <span class="close-popup" onclick="toggleMusicPopup()">&times;</span>
+            
+            <!-- Cover Album/Lagu -->
+            <div class="album-art">🎵</div>
+            
+            <!-- Detail Lagu -->
+            <div class="track-info">
+                <h4 id="popup-track-title">Lagu khusus buat lu 😹</h4>
+                <p id="popup-track-artist">DimzzX Music.</p>
+            </div>
+            
+            <!-- Tag Audio Gaib (Silahkan ganti src pake file .mp3 lu) -->
+            <audio id="nexaAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+            
+            <!-- Kontrol Utama ala Spotify -->
+            <div class="player-controls">
+                <!-- Tombol Stop (Kiri) -->
+                <button onclick="stopNexaMusic()" class="control-btn sub-btn">⏹</button>
+                
+                <!-- Tombol Play Utama di Tengah -->
+                <button id="popup-play-btn" onclick="toggleNexaPlay()" class="control-btn main-btn">▶</button>
+                
+                <!-- Indikator Loop/Repeat (Kanan) -->
+                <button class="control-btn sub-btn" style="color: var(--prime-gold);">🔁</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Clock
@@ -353,6 +533,45 @@
             el.innerText = `$${finalPrice}`;
             el.style.color = change >= 0 ? '#10B981' : '#EF4444';
         }, 2000);
+
+                // LOGIC SPOTIFY-STYLE GLASS PLAYER
+        const nexaAudio = document.getElementById('nexaAudio');
+        const popupPlayBtn = document.getElementById('popup-play-btn');
+        const musicPopup = document.getElementById('music-popup');
+
+        // Fungsi Buka-Tutup Pop-up Dashboard
+        function toggleMusicPopup() {
+            if (musicPopup.style.display === 'block') {
+                musicPopup.style.display = 'none';
+            } else {
+                musicPopup.style.display = 'block';
+            }
+        }
+
+        // Fungsi Play & Pause Lagu
+        function toggleNexaPlay() {
+            if (nexaAudio.paused) {
+                nexaAudio.play().then(() => {
+                    popupPlayBtn.innerText = '⏸'; // Ganti jadi icon pause
+                    popupPlayBtn.style.background = 'var(--prime-gold)'; // Berubah warna gold pas nyala
+                }).catch(err => {
+                    alert("Waduh, browser lu nge-block musik otomatis. Harus klik play sekali lagi bwang!");
+                    console.log(err);
+                });
+            } else {
+                nexaAudio.pause();
+                popupPlayBtn.innerText = '▶'; // Balik jadi icon play
+                popupPlayBtn.style.background = '#fff';
+            }
+        }
+
+        // Fungsi Stop Musik Total
+        function stopNexaMusic() {
+            nexaAudio.pause();
+            nexaAudio.currentTime = 0; // Reset dari detik ke 0
+            popupPlayBtn.innerText = '▶';
+            popupPlayBtn.style.background = '#fff';
+        }
     </script>
 </body>
 </html>
