@@ -300,13 +300,13 @@
             font-size: 0.85rem;
         }
 
-        /* Navigasi / Tombol Kontrol Clean & Transparan */
+        /* Kontrol Utama Modern & Anti-Lonjong */
         .player-controls {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 25px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         
         .control-btn {
@@ -315,37 +315,41 @@
             cursor: pointer;
             transition: all 0.2s ease;
             outline: none;
-            display: flex;
+            padding: 0;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
         }
         
-        /* Tombol Stop & Repeat (Kiri & Kanan) - Tipis Transparan */
+        /* Tombol Stop & Repeat */
         .sub-btn {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.5);
+            width: 30px;
+            height: 30px;
         }
         .sub-btn:hover {
-            color: #fff;
+            color: var(--prime-gold, #D4AF37);
             transform: scale(1.1);
         }
         
-        /* Tombol Play/Pause Utama di Tengah - Lingkaran Transparan */
+        /* Tombol Play/Pause Utama - Dijamin Bulet Sempurna */
         .main-btn {
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.08); /* Efek kaca tipis banget */
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Garis tepi tipis */
-            border-radius: 50%;
-            font-size: 1.1rem;
+            min-width: 50px; /* Ngunci biar ga kegusur flexbox */
+            min-height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--prime-gold, #D4AF37); /* Font icon tengah warna oren/gold */
+            border: 2px solid var(--prime-gold, #D4AF37); /* Lingkaran warna oren/gold */
+            border-radius: 50%; /* Bulet mutlak */
+            font-size: 1.2rem;
+            box-sizing: border-box;
         }
         .main-btn:hover {
             transform: scale(1.08);
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.6);
-            color: #fff;
+            background: rgba(214, 175, 55, 0.1);
+            box-shadow: 0 0 10px rgba(214, 175, 55, 0.3);
         }
 
         /* Efek Animasi Muncul */
@@ -440,12 +444,12 @@
             <audio id="nexaAudio" src="https://www.image2url.com/r2/default/audio/1783224364797-9bed94ce-7913-44f4-b30c-b97356c898ef.mp3" loop></audio>
             
 
-            <!-- Kontrol Utama ala Spotify -->
-             <div class="player-controls">
-                <button onclick="stopNexaMusic()" class="control-btn sub-btn">┚┕</button>
-                <button id="popup-play-btn" onclick="toggleNexaPlay()" class="control-btn main-btn">▷</button>
-                <button class="control-btn sub-btn">⇄</button>
-             </div>
+            <div class="player-controls">
+                <button onclick="stopNexaMusic()" class="control-btn sub-btn">■</button>
+                <button id="popup-play-btn" onclick="toggleNexaPlay()" class="control-btn main-btn">▶</button>
+                <button class="control-btn sub-btn">🔁</button>
+            </div>
+
         </div>
     </div>
 
@@ -552,20 +556,18 @@
             }
         }
 
-        // Fungsi Play & Pause Lagu (Versi Clean No-Color)
+        // Fungsi Play & Pause Lagu
         function toggleNexaPlay() {
             if (nexaAudio.paused) {
                 nexaAudio.play().then(() => {
-                    popupPlayBtn.innerText = '⏸'; // Ganti icon jadi pause tipis
-                    popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.2)'; // Tetep transparan agak terang
+                    popupPlayBtn.innerText = '❚❚'; // Icon pause tegak lurus rapi
                 }).catch(err => {
-                    alert("Waduh error jirr, coba dah lu keluar dari chrome terus hapus cache habis itu lu masuk lagi ke web ini.");
+                    alert("Anjir error, coba u pencet lagi dah tombol play nya");
                     console.log(err);
                 });
             } else {
                 nexaAudio.pause();
-                popupPlayBtn.innerText = '▷';
-                popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.08)';
+                popupPlayBtn.innerText = '▶'; // Balik jadi play segitiga
             }
         }
 
@@ -573,9 +575,9 @@
         function stopNexaMusic() {
             nexaAudio.pause();
             nexaAudio.currentTime = 0;
-            popupPlayBtn.innerText = '▷';
-            popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.08)';
+            popupPlayBtn.innerText = '▶';
         }
+
 
     </script>
 </body>
