@@ -177,8 +177,10 @@
         </div>
 
         <!-- Kotak Petunjuk / Respond AI -->
-        <div id="hint" class="hint-box">
-            Gua udah ngantongin satu angka dari 1 sampai 100. Coba tebak kalau lu emang hoki!
+        <div id="hint" class="hint-box" style="flex-direction: column; gap: 10px;">
+            <!-- Gif Rusdi tersembunyi secara default -->
+            <img id="winner-gif" src="rusdi.gif" alt="Nah Ini" style="display: none; width: 100%; max-width: 180px; border-radius: 10px; margin-bottom: 5px;">
+            <div id="hint-text">Gua udah ngantongin satu angka dari 1 sampai 100. Coba tebak kalau lu emang hoki!</div>
         </div>
 
         <!-- Input Tebakan -->
@@ -200,6 +202,8 @@
         let currentLives;
 
         const hintBox = document.getElementById('hint');
+        const hintText = document.getElementById('hint-text'); // Tambahan target text baru
+        const winnerGif = document.getElementById('winner-gif'); // Target elemen gif rusdi
         const livesBox = document.getElementById('lives');
         const inputArea = document.getElementById('input-area');
         const userInput = document.getElementById('user-guess');
@@ -211,13 +215,15 @@
         function initGame() {
             targetNumber = Math.floor(Math.random() * 100) + 1;
             currentLives = maxLives;
-            hintBox.innerHTML = "Gua udah ngantongin satu angka dari 1 sampai 100. Coba tebak kalau lu emang hoki!";
+            hintText.innerHTML = "Gua udah ngantongin satu angka dari 1 sampai 100. Coba tebak kalau lu emang hoki!";
             hintBox.style.color = "var(--text-muted)";
+            winnerGif.style.display = "none"; // Umpetin lagi pas main ulang
             inputArea.style.display = "flex";
             resetBtn.style.display = "none";
             userInput.value = "";
             renderLives();
         }
+
 
         function renderLives() {
             let hearts = "";
@@ -232,13 +238,14 @@
 
             // Validasi input kosong ato ngaco
             if (isNaN(guess) || guess < 1 || guess > 100) {
-                hintBox.innerText = "Masukin angka yang bener pea! (1 - 100)";
+                hintText.innerText = "Masukkan angka yang bener pea! (1 - 100)";
                 return;
             }
 
             if (guess === targetNumber) {
-                // KONDISI MENANG
-                hintBox.innerHTML = `<span style="color: var(--system-green); font-weight:bold;">ANJAY BENER! 🎉<br>Angkanya emang ${targetNumber}. Lu resmi dapet gelar Jomok Kehormatan!🏅</span>`;
+                // KONDISI MENANG (MUNCULIN GIF RUSDI)
+                winnerGif.style.display = "block"; 
+                hintText.innerHTML = `<span style="color: var(--system-green); font-weight:bold;">ANJAY BENER! 🎉<br>Angkanya emang ${targetNumber}. Lu resmi dapet gelar Jomok Kehormatan!🏅</span>`;
                 endGame();
             } else {
                 currentLives--;
@@ -246,14 +253,14 @@
 
                 if (currentLives <= 0) {
                     // KONDISI KALAH / GAME OVER
-                    hintBox.innerHTML = `<span style="color: var(--system-red); font-weight:bold;">GAME OVER 💀<br>Wkwkwk cupu bet tolol, angkanya itu ${targetNumber}. Coba lagi sono</span>`;
+                    hintText.innerHTML = `<span style="color: var(--system-red); font-weight:bold;">GAME OVER 💀<br>Wkwkwk cupu bet tololl, angkanya itu ${targetNumber}. Coba lagi sono dah</span>`;
                     endGame();
                 } else {
                     // KONDISI SALAH TAPI MASIH ADA NYAWA
                     if (guess > targetNumber) {
-                        hintBox.innerText = `Angka lu ${guess} ketinggian, mass! Turunin dikit.`;
+                        hintText.innerText = `Angka ${guess} ketinggian, mass! Turunin dikit.`;
                     } else {
-                        hintBox.innerText = `Angka lu ${guess} kekecilan, kocak! Naikin dikit.`;
+                        hintText.innerText = `Angka ${guess} kekecilan, kocakk! Naikin dikit.`;
                     }
                     userInput.value = "";
                     userInput.focus();
