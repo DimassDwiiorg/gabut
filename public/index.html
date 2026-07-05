@@ -300,44 +300,52 @@
             font-size: 0.85rem;
         }
 
-        /* Navigasi / Tombol Kontrol ala Spotify */
+        /* Navigasi / Tombol Kontrol Clean & Transparan */
         .player-controls {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
+            margin-top: 10px;
         }
+        
         .control-btn {
             background: none;
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             outline: none;
-        }
-        .sub-btn {
-            font-size: 1.2rem;
-            color: #a0aec0;
-        }
-        .sub-btn:hover {
-            color: #fff;
-        }
-        
-        /* Tombol Play Besar di Tengah */
-        .main-btn {
-            width: 50px;
-            height: 50px;
-            background: #fff;
-            color: #111;
-            border-radius: 50%;
-            font-size: 1.3rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+            padding: 0;
+        }
+        
+        /* Tombol Stop & Repeat (Kiri & Kanan) - Tipis Transparan */
+        .sub-btn {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .sub-btn:hover {
+            color: #fff;
+            transform: scale(1.1);
+        }
+        
+        /* Tombol Play/Pause Utama di Tengah - Lingkaran Transparan */
+        .main-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.08); /* Efek kaca tipis banget */
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Garis tepi tipis */
+            border-radius: 50%;
+            font-size: 1.1rem;
         }
         .main-btn:hover {
             transform: scale(1.08);
-            background: var(--prime-gold, #D4AF37);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #fff;
         }
 
         /* Efek Animasi Muncul */
@@ -431,17 +439,13 @@
             <!-- Tag Audio Gaib (Silahkan ganti src pake file .mp3 lu) -->
             <audio id="nexaAudio" src="https://www.image2url.com/r2/default/audio/1783224364797-9bed94ce-7913-44f4-b30c-b97356c898ef.mp3" loop></audio>
             
+
             <!-- Kontrol Utama ala Spotify -->
-            <div class="player-controls">
-                <!-- Tombol Stop (Kiri) -->
-                <button onclick="stopNexaMusic()" class="control-btn sub-btn">⏹</button>
-                
-                <!-- Tombol Play Utama di Tengah -->
-                <button id="popup-play-btn" onclick="toggleNexaPlay()" class="control-btn main-btn">▶</button>
-                
-                <!-- Indikator Loop/Repeat (Kanan) -->
-                <button class="control-btn sub-btn" style="color: var(--prime-gold);">🔁</button>
-            </div>
+             <div class="player-controls">
+                <button onclick="stopNexaMusic()" class="control-btn sub-btn">┚┕</button>
+                <button id="popup-play-btn" onclick="toggleNexaPlay()" class="control-btn main-btn">▷</button>
+                <button class="control-btn sub-btn">⇄</button>
+             </div>
         </div>
     </div>
 
@@ -548,30 +552,31 @@
             }
         }
 
-        // Fungsi Play & Pause Lagu
+        // Fungsi Play & Pause Lagu (Versi Clean No-Color)
         function toggleNexaPlay() {
             if (nexaAudio.paused) {
                 nexaAudio.play().then(() => {
-                    popupPlayBtn.innerText = '⏸'; // Ganti jadi icon pause
-                    popupPlayBtn.style.background = 'var(--prime-gold)'; // Berubah warna gold pas nyala
+                    popupPlayBtn.innerText = '⏸'; // Ganti icon jadi pause tipis
+                    popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.2)'; // Tetep transparan agak terang
                 }).catch(err => {
-                    alert("Waduh, browser lu nge-block musik otomatis. Harus klik play sekali lagi bwang!");
+                    alert("Waduh error jirr, coba dah lu keluar dari chrome terus hapus cache habis itu lu masuk lagi ke web ini.");
                     console.log(err);
                 });
             } else {
                 nexaAudio.pause();
-                popupPlayBtn.innerText = '▶'; // Balik jadi icon play
-                popupPlayBtn.style.background = '#fff';
+                popupPlayBtn.innerText = '▷';
+                popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.08)';
             }
         }
 
         // Fungsi Stop Musik Total
         function stopNexaMusic() {
             nexaAudio.pause();
-            nexaAudio.currentTime = 0; // Reset dari detik ke 0
-            popupPlayBtn.innerText = '▶';
-            popupPlayBtn.style.background = '#fff';
+            nexaAudio.currentTime = 0;
+            popupPlayBtn.innerText = '▷';
+            popupPlayBtn.style.background = 'rgba(255, 255, 255, 0.08)';
         }
+
     </script>
 </body>
 </html>
