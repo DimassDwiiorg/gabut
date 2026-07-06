@@ -436,6 +436,18 @@
             </div>
         </div>
 
+        <div class="card">
+    <div>
+        <h3>TikTok Video Downloader 📥</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Download video TikTok tanpa watermark tinggal tempel link.</p>
+        <input type="text" id="tt-input" placeholder="Tempel link video TikTok di sini...">
+        <button id="tt-btn" onclick="downloadTikTok()">Ambil Video</button>
+        <div class="output-box" id="tt-output" style="display: none; text-align: center;">
+            <!-- Nanti tombol download asli muncul di sini -->
+        </div>
+    </div>
+        </div>
+
                 <!-- FITUR 5: NexaArcade Hub (Pindah Halaman) -->
         <div class="card">
             <h3>NexaArcade 🎮</h3>
@@ -610,6 +622,53 @@ function keluarGame() {
             }).catch(err => {
                 console.error('Gagal copy: ', err);
             });
+        }
+
+        async function downloadTikTok() {
+    const inputEl = document.getElementById('tt-input');
+    const outputEl = document.getElementById('tt-output');
+    const btnEl = document.getElementById('tt-btn');
+    const url = inputEl.value.trim();
+
+    if (!url) {
+        alert("Isi dulu link TikTok-nya, bwang!");
+        return;
+    }
+
+    // Tampilin loading pas proses nyari video
+    outputEl.style.display = "block";
+    outputEl.innerHTML = '<span class="loading-text">Sabar, lagi ngorok nyari video...</span>';
+    btnEl.disabled = true;
+
+    try {
+        // Nembak ke endpoint API temen lu (EpanD)
+        const response = await fetch(`https://apis.epand.my.id/api/download/tiktok?url=${encodeURIComponent(url)}`);
+        const result = await response.json();
+
+        // Cek status true dari respons API
+        if (result.status && result.data) {
+            const title = result.data.title || "Video TikTok";
+            const author = result.data.author || "Unknown Creator";
+            // Ambil link download video di indeks ke-0 dari array links
+            const videoUrl = result.data.links[0]; 
+
+            outputEl.innerHTML = `
+                <p style="margin-bottom: 5px; color: #10B981; font-weight: bold;">✅ Video Berhasil Ditemukan!</p>
+                <p style="font-size: 0.85rem; color: #fff; margin-bottom: 2px;"><b>Judul:</b> ${title}</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;"><b>Creator:</b> @${author}</p>
+                <a href="${videoUrl}" target="_blank" download="tiktok_video.mp4" style="text-decoration: none;">
+                    <button style="background: #10B981; color: white; margin-top: 0; font-weight: bold; cursor: pointer;">📥 KLIK BUAT DOWNLOAD</button>
+                </a>
+            `;
+        } else {
+            outputEl.innerText = "Gagal ambyar! API temen lu lagi ngambek atau link-nya kagak valid, bwang.";
+        }
+    } catch (error) {
+        console.error(error);
+        outputEl.innerText = "Error: Gagal tersambung ke API EpanD.";
+    } finally {
+        btnEl.disabled = false;
+    }
         }
 
 
