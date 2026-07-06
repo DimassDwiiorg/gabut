@@ -631,13 +631,13 @@ function keluarGame() {
     const url = inputEl.value.trim();
 
     if (!url) {
-        alert("Isi dulu link TikTok-nya, bwang!");
+        alert("Isi dulu link TikTok-nya, plenger");
         return;
     }
 
     // Tampilin loading pas proses nyari video
     outputEl.style.display = "block";
-    outputEl.innerHTML = '<span class="loading-text">Sabar, lagi ngorok nyari video...</span>';
+    outputEl.innerHTML = '<span class="loading-text">Sabar, lagi nyari vt nya...</span>';
     btnEl.disabled = true;
 
     try {
@@ -661,11 +661,11 @@ function keluarGame() {
                 </a>
             `;
         } else {
-            outputEl.innerText = "Gagal ambyar! API temen lu lagi ngambek atau link-nya kagak valid, bwang.";
+            outputEl.innerText = "Walahh sorii lekk fiturnya lagi error euy";
         }
     } catch (error) {
         console.error(error);
-        outputEl.innerText = "Error: Gagal tersambung ke API EpanD.";
+        outputEl.innerText = "Error: Gagal tersambung ke API.";
     } finally {
         btnEl.disabled = false;
     }
